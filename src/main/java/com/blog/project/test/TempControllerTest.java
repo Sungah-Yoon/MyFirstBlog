@@ -15,4 +15,14 @@ public class TempControllerTest {
         // 풀경로: src/main/resources/static/home.html
         return "/home.html";
     }
+
+    // http://localhost:8085/blog/temp/jsp
+    @GetMapping("/temp/jsp")
+    public String tempJsp(){
+        // prefix: /WEB-INF/views/
+        // suffix: .jsp
+        // 풀경로: /WEB-INF/views/test.jsp
+        return "test";
+    }
 }
+

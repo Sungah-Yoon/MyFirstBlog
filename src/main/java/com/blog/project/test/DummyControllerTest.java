@@ -4,6 +4,7 @@ import com.blog.project.model.RoleType;
 import com.blog.project.model.User;
 import com.blog.project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @Transactional
@@ -20,6 +22,21 @@ public class DummyControllerTest {
 
     @Autowired   // 의존성 주입(DI)
     private UserRepository userRepository;
+
+
+    // http://localhost:8085/blog/dummy/user/1
+    @DeleteMapping("dummy/user/{id}")
+    public String delete(@PathVariable int id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (!user.isPresent()) {
+            return "삭제에 실패하였습니다. 해당 id 는 DB에 없습니다.";
+        }
+
+        userRepository.deleteById(id);
+        return "삭제되었습니다. id: " + id;
+
+    }
 
 
     // http://localhost:8085/blog/dummy/user/1
@@ -40,7 +57,8 @@ public class DummyControllerTest {
 
         // userRepository.save(user);
 
-        return null;
+        // 더티 체킹을 이용한 update
+        return user;
     }
 
 

@@ -3,6 +3,9 @@ let index = {
         $("#btn-save").on("click", ()=>{  // function(){} 대신, ()=>{}를 사용한 이유는 this를 바인딩하기 위함
             this.save();
         });   // 첫번째 param(click) -> event, 두번째 param -> action
+        $("#btn-login").on("click", ()=>{
+            this.login();
+        });
     },
 
     save: function (){
@@ -13,7 +16,7 @@ let index = {
             username: $("#username").val(),
             password: $("#password").val(),
             email: $("#email").val()
-        }
+        };
 
         //console.log(data);
 
@@ -31,6 +34,29 @@ let index = {
             alert("회원가입이 완료되었습니다.");
             //console.log(resp);
             location.href = "/blog";  // 응답 제대로 받으면, 메인 화면으로 연결
+        }).fail(function (error){
+            alert(JSON.stringify(error));
+        });
+    },
+
+    login: function (){
+
+        // 1. 사용자 정보 요청
+        let data ={
+            username: $("#username").val(),
+            password: $("#password").val(),
+        };
+
+        $.ajax({
+            // 로그인 수행 요청
+            type:"POST",
+            url:"/blog/api/user/login",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+        }).done(function (resp){
+            alert("로그인이 완료되었습니다.");
+            location.href = "/blog";       // 응답 제대로 받으면, 메인 화면으로 연결
         }).fail(function (error){
             alert(JSON.stringify(error));
         });

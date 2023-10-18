@@ -20,7 +20,6 @@ public class UserApiController {
     @PostMapping("/auth/joinProc")
     public ResponseDto<Integer> save(@RequestBody User user) {
         System.out.println("UserApiController: save 호출됨");
-        user.setRole(RoleType.USER);
         userService.회원가입(user);                    // 1이면 성공, -1이면 실패
 
         return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);   // 자바 오브젝트를 JSON으로 변환해, 리턴(Jackson)

@@ -3,12 +3,12 @@ package com.blog.project.config;
 import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
@@ -20,9 +20,22 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @EnableMethodSecurity      // 특정 주소로 접근하면, 권한 및 인증을 "미리 체크"하겠다는 뜻
 public class SecurityConfig {
 
+//    @Autowired
+//    private PrincipalDetailService principalDetailService;
+//
     @Bean
     public BCryptPasswordEncoder encoderPWD() {
         return new BCryptPasswordEncoder();
+    }
+//
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(principalDetailService ).passwordEncoder(encoderPWD());
+//    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -41,7 +54,9 @@ public class SecurityConfig {
                         .authenticated()                         // 인증이 되어야 함   -> 필터링
                 )
                 .formLogin(login -> login                        // form 방식 로그인 사용
-                        .loginPage("/auth/loginForm"));            // 커스텀 한 로그인 페이지 경로에 사용자를 리디렉션하도록 설정
+                        .loginPage("/auth/loginForm")            // 커스텀 한 로그인 페이지 경로에 사용자를 리디렉션하도록 설정
+                        .loginProcessingUrl("/auth/loginProc")   // 스프링 시큐리티가 해당 주소로 오는 로그인을 가로채서 대신 로그인 해줌
+                        .defaultSuccessUrl("/"));                // 정상적으로 로그인 수행되면 해당 주소로 이동
 
         return http.build();
     }

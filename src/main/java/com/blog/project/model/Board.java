@@ -28,7 +28,6 @@ public class Board {
     @Lob
     private String content;  // 글 내용
 
-    @ColumnDefault("0")
     private int count;       // 조회수
 
     @ManyToOne(fetch = FetchType.EAGER)

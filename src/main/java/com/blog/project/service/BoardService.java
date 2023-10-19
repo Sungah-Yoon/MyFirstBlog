@@ -1,7 +1,6 @@
 package com.blog.project.service;
 
 import com.blog.project.model.Board;
-import com.blog.project.model.RoleType;
 import com.blog.project.model.User;
 import com.blog.project.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,4 +22,7 @@ public class BoardService {
         boardRepository.save(board);
     }
 
+    public List<Board> 글목록() {
+        return boardRepository.findAll();
+    }
 }
